@@ -1,0 +1,39 @@
+base:
+  project: mono-1-model-c
+  dir_data_raw: ../data/raw
+  dir_data_processed: ../data/processed
+  dir_models: ../models
+  dir_reports: ../reports
+  random_state: 42 # random state for train/test split
+
+data_load:
+  dataset_csv: iris.csv
+
+featurize:
+  features_path: model-c-featured_iris.csv
+  target_column: target
+  dependencies:  # use Models A and B to generate features 
+    model_a: model-a.joblib
+    model_b: model-b.joblib
+
+data_split:
+  train_path: model-c-train_iris.csv
+  test_path: model-c-test_iris.csv
+  test_size: 0.3
+
+train:
+  model_name: model-c.joblib
+  cv: 3
+  estimator_name: logreg
+  estimators:
+    logreg: # sklearn.linear_model.LogisticRegression
+      param_grid: # params of GridSearchCV constructor
+        C: [1]
+        max_iter: [100]
+        solver: ['lbfgs']
+        multi_class: ['multinomial']
+
+evaluate:
+  metrics_file: model-c-metrics.json
+  confusion_matrix_png: model-c-confusion_matrix.png
+  plots_file: model-c-classess.csv

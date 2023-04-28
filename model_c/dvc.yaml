@@ -1,0 +1,65 @@
+stages:
+
+  data_load:
+    cmd: python src/pipelines/data_load.py --config=params.yaml
+    deps:
+    - src/pipelines/data_load.py
+    params:
+    - base
+    - data_load
+    outs:
+    - ${base.dir_data_raw}/${data_load.dataset_csv}
+
+  featurize:
+    cmd: python src/pipelines/featurize.py --config=params.yaml
+    deps:
+    - ${base.dir_data_raw}/${data_load.dataset_csv}
+    - src/pipelines/featurize.py
+    - ${base.dir_models}/${featurize.dependencies.model_a}
+    - ${base.dir_models}/${featurize.dependencies.model_b}
+    params:
+    - base
+    - featurize
+    outs:
+    - ${base.dir_data_processed}/${featurize.features_path}
+
+  data_split:
+    cmd: python src/pipelines/data_split.py --config=params.yaml
+    deps:
+    - ${base.dir_data_processed}/${featurize.features_path}
+    - src/pipelines/data_split.py
+    params:
+    - base
+    - data_split
+    outs:
+    - ${base.dir_data_processed}/${data_split.train_path}
+    - ${base.dir_data_processed}/${data_split.test_path}
+
+  train:
+    cmd: python src/pipelines/train.py --config=params.yaml
+    deps:
+    - ${base.dir_data_processed}/${data_split.train_path}
+    - src/pipelines/train.py
+    params:
+    - base
+    - train
+    outs:
+    - ${base.dir_models}/${train.model_name}
+    
+  evaluate:
+    cmd: python src/pipelines/evaluate.py --config=params.yaml
+    deps:
+    - ${base.dir_models}/${train.model_name}
+    - ${base.dir_data_processed}/${data_split.test_path}
+    - src/pipelines/evaluate.py
+    params:
+    - base
+    - data_split.test_path
+    - evaluate
+    - featurize.target_column
+    outs:
+    - ${base.dir_reports}/${evaluate.confusion_matrix_png}
+    metrics:
+    - ${base.dir_reports}/${evaluate.metrics_file}
+    plots:
+    - ${base.dir_reports}/${evaluate.plots_file}

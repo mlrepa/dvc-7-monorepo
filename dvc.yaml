@@ -1,0 +1,35 @@
+vars:
+  - dir_models: models
+
+stages: 
+  
+  build_model_a: 
+    cmd: cd model_a && dvc exp run
+    outs: 
+      - ${dir_models}/model-a.joblib
+  
+      
+  build_model_b: 
+    cmd: cd model_b && dvc exp run
+    outs: 
+      - ${dir_models}/model-b.joblib
+  
+
+  build_model_c: 
+    cmd: cd model_c && dvc exp run
+    deps:
+      - ${dir_models}/model-a.joblib
+      - ${dir_models}/model-b.joblib
+    outs: 
+      - ${dir_models}/model-c.joblib
+
+
+  build_metrics_report:
+    cmd: python src/build_metrics_report.py --config=params.yaml
+    deps:
+      - ${base.dir_reports}/${model_a.metrics_file}
+      - ${base.dir_reports}/${model_b.metrics_file}
+      - ${base.dir_reports}/${model_c.metrics_file}
+    metrics:
+    - ${base.dir_reports}/${build_metrics_report.metrics_file}:
+        cache: false

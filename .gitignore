@@ -1,0 +1,28 @@
+# folders
+
+## Cache
+*/.ipynb_checkpoints/*
+__pycache__
+
+## IDEs
+.idea/
+.vscode/*
+
+# Project
+data/*
+mlruns/*
+models/*
+notebooks/*
+
+# Venv
+.venv/*
+
+
+# files
+
+## OS configs
+.DS_Store
+
+## Configs
+.env
+.demo/*

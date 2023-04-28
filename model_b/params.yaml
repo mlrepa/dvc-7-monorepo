@@ -1,0 +1,36 @@
+base:
+  project: mono-1-model-b
+  dir_data_raw: ../data/raw
+  dir_data_processed: ../data/processed
+  dir_models: ../models
+  dir_reports: ../reports
+  random_state: 42 # random state for train/test split
+
+data_load:
+  dataset_csv: iris.csv
+
+featurize:
+  features_path: model-b-featured_iris.csv
+  target_column: target
+
+data_split:
+  train_path: model-b-train_iris.csv
+  test_path: model-b-test_iris.csv
+  test_size: 0.2
+
+train:
+  model_name: model-b.joblib
+  cv: 5
+  estimator_name: svm
+  estimators:
+    svm: # sklearn.svm.SVC
+      param_grid:
+        C: [10, 100]
+        kernel: ["rbf", "linear"]
+        gamma: ["scale"]
+        degree: [5, 10]
+
+evaluate:
+  metrics_file: model-b-metrics.json
+  confusion_matrix_png: model-b-confusion_matrix.png
+  plots_file: model-b-classess.csv

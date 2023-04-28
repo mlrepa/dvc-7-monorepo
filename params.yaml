@@ -1,0 +1,29 @@
+base:
+  # project: mono-1-model-a
+  dir_data_raw: data/raw
+  dir_data_processed: data/processed
+  dir_models: models
+  dir_reports: reports
+  random_state: 42 # random state for train/test split
+
+
+model_a: 
+  metrics_file: model-a-metrics.json
+  confusion_matrix_png: model-a-confusion_matrix.png
+  plots_file: model-a-classess.csv
+
+
+model_b: 
+  metrics_file: model-b-metrics.json
+  confusion_matrix_png: model-b-confusion_matrix.png
+  plots_file: model-b-classess.csv
+
+
+model_c: 
+  metrics_file: model-c-metrics.json
+  confusion_matrix_png: model-c-confusion_matrix.png
+  plots_file: model-c-classess.csv
+
+
+build_metrics_report: 
+  metrics_file: all-metrics.json
